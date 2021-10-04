@@ -1,0 +1,29 @@
+#######GENES & MUTATIONS LISTS#########
+CHASMP: Data/GeneLists/ChasmPlus.collin.pancan.cancer.txt
+DNAGLIST: Data/GeneLists/299.cancer.glist.txt
+HUGO: Data/GeneLists/HUGO_ENSG.20200625.txt
+PAM50: Data/GeneLists/PAM.genes.txt
+PANCAN_MUTS: Data/GeneLists/Collated_Pam50_PDFs.20190731.txt
+#######CLINICAL DATA########### NOTE::CHECK the PAM50CLASS and see if I use it. 
+CLINICAL: Data/Clinical/HCI_clinical_Mar2021.txt
+PAM50CLASS: Data/GeneLists/Collated_Pam50_PDFs.20190731.txt
+RNATECH: Data/Meta/RNAtechnologies.txt
+RNABATCH: Data/RNAseq/metadata_20201229.txt
+#######Indepth METAFILES#########
+INCNVMETA: Data/Meta/indepth.cnv.20210120.txt
+INDNAMETA: Data/Meta/indepth.dna.20210120.txt
+INRNAMETA: Data/Meta/indepth.rna.20210120.txt
+##########AR study################
+LAR: Data/GeneLists/LAR.genes.txt
+LARRNAMETA: Data/Meta/lar.rna.txtA
+########## TUMOR ONLY DATA  ############
+TOCNVMETA: Data/Meta/to.cnv.20210118.txt
+TODNAMETA: Data/Meta/to.dna.20210118.txt
+TORNAMETA: Data/Meta/to.rna.20201229.txt
+########## GENOMICS DATA These will be provided through dbGAP (again, due to IRB 5 samples could not be included) 
+TOMAF: Data/Genomics/TumorOnly_2020_12_22.all.HG38.maf
+RNACNT: Data/Genomics/combined.Ecnt.welmRNA.wide.cleaned.txt
+RNATPM: Data/Genomics/combined.TPM.welmRNA.wide.cleaned.txt
+INCNV: Data/Genomics/combined.xingyi.20210118.txt
+###########This is our no list (euphemism for blacklist)############
+NOLIST: Data/nolist.20200921.txt

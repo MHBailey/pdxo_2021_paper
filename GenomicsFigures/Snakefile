@@ -1,0 +1,229 @@
+configfile: 'config.yaml'
+
+
+from pathlib import Path
+import datetime as dt
+
+DATE = dt.datetime.today().strftime("%Y_%m_%d")
+DAY = dt.datetime.today().strftime("%d")
+
+
+
+rule normalize_RNA:
+    #source activate rnaseq2
+    input:
+        tocorrect='Code/deseq2.batchcorrected.R',
+        rna=config['RNATPM'],
+        rnabatch=config['RNABATCH'],
+        rnatech=config['RNATECH'],
+        hugo=config['HUGO'],
+        rnacnt=config['RNACNT'],
+        nolist=config['NOLIST']
+    output:
+        batched='Processed_data/normalized.TPM.batch',
+        suppfigBatchRNA='Figures/RNA_Batches_HCI001.pdf',
+        deseq2='Processed_data/normalized.DESEQ.RSEM.txt',
+        deseq2b='Processed_data/normalized.DESEQ.RSEM.batch',
+        nolistrem='Processed_data/combined.Ecnt.welmRNA.wide.cleaned.txt',
+        deseq2top='Processed_data/top1000.DEgenes.nobatch.txt',
+        deseq2topb='Processed_data/top1000.DEgenes.batched.txt'
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.tocorrect} {input.rna} {input.rnabatch} {input.rnatech} {input.hugo} {output.batched} {output.suppfigBatchRNA} {input.rnacnt} {output.deseq2} {output.deseq2b} {input.nolist} {output.nolistrem} {output.deseq2top} {output.deseq2topb}
+        '''
+
+rule normalize_CNV:
+#source activate rnaseq2 
+    input:
+        cnv=config['INCNV'],
+        correctCNV='Code/cnv.batchcorrected.R',
+    output:
+        cnvbatched='Processed_data/normalized.CNV.batch',
+        cnvfig='Figures/CNV.threshold.adj.pdf'
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.correctCNV} {input.cnv} {output.cnvbatched} {output.cnvfig}
+        '''
+
+rule manual_review_Indepth:
+    input:
+        maf='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss.maf',
+        false='Processed_data/ManReview_Indepth_False.1-16.txt',
+        rmmr='Code/removeManRev.R'
+    output:
+        mcmaf='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss_mr.maf',
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.rmmr} {input.maf} {input.false} {output.mcmaf}
+        '''
+
+rule restrict_DNA_TO:
+#source activate stats? 
+    input:
+        dna=config['TOMAF'],
+        dnalist=config['DNAGLIST'],
+        chasmP=config['CHASMP'],
+        pancanatlas=config['PANCAN_MUTS'],
+        restrict='Code/restrict_muts.R',
+        meta=config['TODNAMETA']
+    output:
+        restricted='Processed_data/TumorOnly_2021_02_18.all.HG38.PASS.indels.cancer_miss.maf'
+    params:
+        istumoronly='Yes'
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.restrict} {input.dna} {input.dnalist} {input.chasmP} {input.pancanatlas} {input.meta} {output.restricted} {params.istumoronly}
+        '''
+
+
+rule complexHeatmap_PDXonly:
+    #source activate stats
+    input:
+        code='Code/complexHeatmap_TO.R',
+        dna='Processed_data/TumorOnly_2021_02_18.all.HG38.PASS.indels.cancer_miss_mr.maf',
+        dnameta=config['TODNAMETA'],
+        cnv=config['INCNV'],
+        cnvmeta=config['TOCNVMETA'],
+        rna='Processed_data/normalized.DESEQ.RSEM.batch',
+        rnameta=config['TORNAMETA'],
+        clinical=config['CLINICAL']
+    output:
+        pdxofig='Figures/Fig1a_pdx.to.genomicsFig.20210218.pdf'
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.code} {input.dna} {input.dnameta} {input.cnv} {input.cnvmeta} {input.rna} {input.rnameta} {input.clinical} {output.pdxofig}
+        '''
+
+
+rule PAM50_expression_profiles:
+#This is going to make a complexHeatmap so... source activate stats
+    input:
+        plotpam50='Code/plotpam50.R',
+        batched='Processed_data/normalized.DESEQ.RSEM.batch',
+        genelist=config['PAM50'],
+        rnaTOmeta=config['TORNAMETA'],
+        pam50class=config['PAM50CLASS'],
+        clinical=config['CLINICAL']
+    output:
+        pampdf='Figures/Fig1b_pam50.Counts.20210218.pdf',
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.plotpam50} {input.batched} {input.genelist} {input.rnaTOmeta} {input.pam50class} {input.clinical} {output.pampdf}
+        '''
+
+
+rule restrict_DNA_Indepth:
+    input:
+        dna=config['TOMAF'],
+        dnalist=config['DNAGLIST'],
+        chasmP=config['CHASMP'],
+        pancanatlas=config['PANCAN_MUTS'],
+        restrict='Code/restrict_muts.R',
+        meta=config['INDNAMETA']
+    output:
+        restricted='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss.maf'
+    params:
+        istumoronly='Yes'
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.restrict} {input.dna} {input.dnalist} {input.chasmP} {input.pancanatlas} {input.meta} {output.restricted} {params.istumoronly}
+        '''
+
+
+rule manual_review_Indepth:
+    input:
+        maf='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss.maf',
+        false='Processed_data/ManReview_Indepth_False.1-16.txt',
+        rmmr='Code/removeManRev.R'
+    output:
+        mcmaf='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss_mr.maf',
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.rmmr} {input.maf} {input.false} {output.mcmaf}
+        '''
+
+
+rule complexHeatmap_Indepth:
+    #source activate stats : snakemake -np next
+    input:
+        code='Code/complexHeatmap.R',
+        dna='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss_mr.maf',
+        dnameta=config['INDNAMETA'],
+        cnv=config['INCNV'],
+        cnvmeta=config['INCNVMETA'],
+        rna='Processed_data/normalized.DESEQ.RSEM.batch',
+        rnameta=config['INRNAMETA'],
+        rnaTOP='Processed_data/top1000.DEgenes.batched.txt'
+    output:
+        pdxofig= 'Figures/pdxo.genomicsFig.20210129.pdf'
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.code} {input.dna} {input.dnameta} {input.cnv} {input.cnvmeta} {input.rna} {input.rnameta} {input.rnaTOP} {output.pdxofig}
+        '''
+
+rule PAM50_custom_profiles:
+#This is going to make a complexHeatmap so... source activate stats
+    input:
+        plotpam50='Code/plotpam50.R',
+        batched='Processed_data/Rebuttal/normalized.DESEQ.RSEM.txt',
+        genelist=config['PAM50'],
+        rnaTOmeta=config['INRNAMETA'],
+        pam50class=config['PAM50CLASS'],
+        clinical=config['CLINICAL']
+    output:
+        pampdf='Figures/Fig4c_pam50.Counts.Indepth.20210618.pdf',
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.plotpam50} {input.batched} {input.genelist} {input.rnaTOmeta} {input.pam50class} {input.clinical} {output.pampdf}
+        '''
+
+rule LAR_expression_profiles:
+    input:
+        plotpam50='Code/plotpam50.R',
+        batched='Processed_data/normalized.DESEQ.RSEM.batch',
+        genelist=config['LAR'],
+        rnaTOmeta=config['LARRNAMETA'],
+        pam50class=config['PAM50CLASS'],
+        clinical=config['CLINICAL']
+    output:
+        pampdf='Figures/pam50.Counts.AR.pdf'
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.plotpam50} {input.batched} {input.genelist} {input.rnaTOmeta} {input.pam50class}  {input.clinical} {output.pampdf}
+        '''
+
+rule Figure_1a:
+    input:
+        fig1a="Figures/Fig1a_pdx.to.genomicsFig.20210218.pdf"
+
+rule Figure_1b:
+    input:
+        fig1b="Figures/Fig1b_pam50.Counts.20210218.pdf"
+
+rule Figure_4b:
+    input:
+        fig4b="Figures/Fig4b_pdxo.genomicsFig.20210129.pdf"
+
+rule Figure_4c:
+    input:
+        fig4c="Figures/Fig4c_pam50.Counts.Indepth.20210618.pdf"
+
+rule Figure_57b:
+    input:
+        fig_extended_6b="Figures/fig57b.threshold.adj.pdf"
+
+#Note Figure_57a
+#This was done using cnvkit.py heatmap *.segs --no-shift-xy -g Female -c 6
+
+rule Figure_66:
+    input:
+        fig_extended_10c="Figures/fig66c_pam50.Counts.AR.pdf"
+
+
+
+
+
+
+
+
+

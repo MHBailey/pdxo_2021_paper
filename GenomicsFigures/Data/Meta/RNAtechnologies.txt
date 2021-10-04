@@ -1,0 +1,13 @@
+8506	polyAselction
+10962	RiboZero_HiSeq
+13575	RiboZero_HiSeq
+14308	polyAselction
+14762	RiboZero_HiSeq
+14870	RiboZero_HiSeq
+14967	RiboZero_HiSeq
+15246	RiboZero_HiSeq
+15301	RiboZero_HiSeq
+15408	RiboZero_HiSeq
+15838	RiboZero_HiSeq
+17679	RiboZero_HiSeq
+18587	RiboZero_Nova
