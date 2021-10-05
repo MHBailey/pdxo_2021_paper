@@ -24,12 +24,12 @@ I was a little sloppy having two conda environments to get this off the ground b
 source activate stats
 
 #### STEP 2.2 (use -np for a dry-run) 
-snakemake -p Figure_1a
-snakemake -p Figure_1b
-snakemake -p Figure_4b
-snakemake -p Figure_4c
-snakemake -p Figure_57b
-snakemake -p Figure_66c
+snakemake -p Figure_1a\ 
+snakemake -p Figure_1b\
+snakemake -p Figure_4b\
+snakemake -p Figure_4c\
+snakemake -p Figure_57b\
+snakemake -p Figure_66c\
 
 
 
