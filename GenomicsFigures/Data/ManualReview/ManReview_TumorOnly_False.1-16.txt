@@ -1,0 +1,5 @@
+Hugo_Symbol	Entrez_Gene_Id	Center	NCBI_Build	Chromosome	Start_Position	End_Position	Strand	Variant_Classification	Variant_Type	Reference_Allele	Tumor_Seq_Allele1	Tumor_Seq_Allele2	dbSNP_RS	dbSNP_Val_Status	Tumor_Sample_Barcode
+DIAPH2	1730	.	GRCh38	chrX	96916436	96916437	+	Splice_Site	DNP	AG	AG	TT	novel	NA	HCI002_pdx_P7_XXX_WXS
+RECQL	5965	.	GRCh38	chr12	21470336	21470336	+	Missense_Mutation	SNP	G	G	A	rs767841512	NA	HCI003_pdx_P3_XXX_WXS
+ATM	472	.	GRCh38	chr11	108271262	108271262	+	Missense_Mutation	SNP	C	C	T	rs1449057707	NA	HCI008_pdx_P4_XXX_WXS
+STAG2	10735	.	GRCh38	chrX	124051121	124051121	+	Nonsense_Mutation	SNP	C	C	T	rs868506126	NA	HCI025_pdx_P2_XXX_WXS

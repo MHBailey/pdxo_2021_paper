@@ -8,14 +8,14 @@ PANCAN_MUTS: Data/GeneLists/Collated_Pam50_PDFs.20190731.txt
 CLINICAL: Data/Clinical/HCI_clinical_Mar2021.txt
 PAM50CLASS: Data/GeneLists/Collated_Pam50_PDFs.20190731.txt
 RNATECH: Data/Meta/RNAtechnologies.txt
-RNABATCH: Data/RNAseq/metadata_20201229.txt
+RNABATCH: Data/Meta/metadata_20201229.txt
 #######Indepth METAFILES#########
 INCNVMETA: Data/Meta/indepth.cnv.20210120.txt
 INDNAMETA: Data/Meta/indepth.dna.20210120.txt
 INRNAMETA: Data/Meta/indepth.rna.20210120.txt
 ##########AR study################
 LAR: Data/GeneLists/LAR.genes.txt
-LARRNAMETA: Data/Meta/lar.rna.txtA
+LARRNAMETA: Data/Meta/lar.rna.txt
 ########## TUMOR ONLY DATA  ############
 TOCNVMETA: Data/Meta/to.cnv.20210118.txt
 TODNAMETA: Data/Meta/to.dna.20210118.txt
@@ -27,3 +27,6 @@ RNATPM: Data/Genomics/combined.TPM.welmRNA.wide.cleaned.txt
 INCNV: Data/Genomics/combined.xingyi.20210118.txt
 ###########This is our no list (euphemism for blacklist)############
 NOLIST: Data/nolist.20200921.txt
+###########These files are manually revied to be false positive hits in the MAF that I used.######### 
+TOMANREV: Data/ManualReview/ManReview_TumorOnly_False.1-16.txt
+INMANREV: Data/ManualReview/ManReview_Indepth_False.1-16.txt

@@ -39,7 +39,7 @@ rule normalize_CNV:
         correctCNV='Code/cnv.batchcorrected.R',
     output:
         cnvbatched='Processed_data/normalized.CNV.batch',
-        cnvfig='Figures/CNV.threshold.adj.pdf'
+        cnvfig='Figures/fig57b.CNV.threshold.adj.pdf'
     shell:
         '''
         Rscript --quiet --vanilla {input.correctCNV} {input.cnv} {output.cnvbatched} {output.cnvfig}
@@ -47,11 +47,11 @@ rule normalize_CNV:
 
 rule manual_review_Indepth:
     input:
-        maf='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss.maf',
-        false='Processed_data/ManReview_Indepth_False.1-16.txt',
+        maf='Processed_data/Indepth_'+DATE+'.all.HG38.PASS.indels.cancer_miss.maf',
+        false=config['INMANREV'],
         rmmr='Code/removeManRev.R'
     output:
-        mcmaf='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss_mr.maf',
+        mcmaf='Processed_data/Indepth_'+DATE+'.all.HG38.PASS.indels.cancer_miss_mr.maf',
     shell:
         '''
         Rscript --quiet --vanilla {input.rmmr} {input.maf} {input.false} {output.mcmaf}
@@ -67,7 +67,7 @@ rule restrict_DNA_TO:
         restrict='Code/restrict_muts.R',
         meta=config['TODNAMETA']
     output:
-        restricted='Processed_data/TumorOnly_2021_02_18.all.HG38.PASS.indels.cancer_miss.maf'
+        restricted='Processed_data/TumorOnly_'+DATE+'.all.HG38.PASS.indels.cancer_miss.maf'
     params:
         istumoronly='Yes'
     shell:
@@ -75,12 +75,23 @@ rule restrict_DNA_TO:
         Rscript --quiet --vanilla {input.restrict} {input.dna} {input.dnalist} {input.chasmP} {input.pancanatlas} {input.meta} {output.restricted} {params.istumoronly}
         '''
 
+rule manual_review_TO:
+    input:
+        maf='Processed_data/TumorOnly_'+DATE+'.all.HG38.PASS.indels.cancer_miss.maf',
+        false=config['TOMANREV'],
+        rmmr='Code/removeManRev.R'
+    output:
+        mcmaf='Processed_data/TumorOnly_'+DATE+'.all.HG38.PASS.indels.cancer_miss_mr.maf',
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.rmmr} {input.maf} {input.false} {output.mcmaf}
+        '''
 
 rule complexHeatmap_PDXonly:
     #source activate stats
     input:
         code='Code/complexHeatmap_TO.R',
-        dna='Processed_data/TumorOnly_2021_02_18.all.HG38.PASS.indels.cancer_miss_mr.maf',
+        dna='Processed_data/TumorOnly_'+DATE+'.all.HG38.PASS.indels.cancer_miss_mr.maf',
         dnameta=config['TODNAMETA'],
         cnv=config['INCNV'],
         cnvmeta=config['TOCNVMETA'],
@@ -88,7 +99,7 @@ rule complexHeatmap_PDXonly:
         rnameta=config['TORNAMETA'],
         clinical=config['CLINICAL']
     output:
-        pdxofig='Figures/Fig1a_pdx.to.genomicsFig.20210218.pdf'
+        pdxofig='Figures/Fig1a_pdx.to.genomicsFig.'+DATE+'.pdf'
     shell:
         '''
         Rscript --quiet --vanilla {input.code} {input.dna} {input.dnameta} {input.cnv} {input.cnvmeta} {input.rna} {input.rnameta} {input.clinical} {output.pdxofig}
@@ -105,7 +116,7 @@ rule PAM50_expression_profiles:
         pam50class=config['PAM50CLASS'],
         clinical=config['CLINICAL']
     output:
-        pampdf='Figures/Fig1b_pam50.Counts.20210218.pdf',
+        pampdf='Figures/Fig1b_pam50.Counts.'+DATE+'.pdf'
     shell:
         '''
         Rscript --quiet --vanilla {input.plotpam50} {input.batched} {input.genelist} {input.rnaTOmeta} {input.pam50class} {input.clinical} {output.pampdf}
@@ -121,7 +132,7 @@ rule restrict_DNA_Indepth:
         restrict='Code/restrict_muts.R',
         meta=config['INDNAMETA']
     output:
-        restricted='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss.maf'
+        restricted='Processed_data/Indepth_'+DATE+'.all.HG38.PASS.indels.cancer_miss.maf'
     params:
         istumoronly='Yes'
     shell:
@@ -130,24 +141,11 @@ rule restrict_DNA_Indepth:
         '''
 
 
-rule manual_review_Indepth:
-    input:
-        maf='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss.maf',
-        false='Processed_data/ManReview_Indepth_False.1-16.txt',
-        rmmr='Code/removeManRev.R'
-    output:
-        mcmaf='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss_mr.maf',
-    shell:
-        '''
-        Rscript --quiet --vanilla {input.rmmr} {input.maf} {input.false} {output.mcmaf}
-        '''
-
-
 rule complexHeatmap_Indepth:
     #source activate stats : snakemake -np next
     input:
         code='Code/complexHeatmap.R',
-        dna='Processed_data/Indepth_2021_01_20.all.HG38.PASS.indels.cancer_miss_mr.maf',
+        dna='Processed_data/Indepth_'+DATE+'.all.HG38.PASS.indels.cancer_miss_mr.maf',
         dnameta=config['INDNAMETA'],
         cnv=config['INCNV'],
         cnvmeta=config['INCNVMETA'],
@@ -155,7 +153,7 @@ rule complexHeatmap_Indepth:
         rnameta=config['INRNAMETA'],
         rnaTOP='Processed_data/top1000.DEgenes.batched.txt'
     output:
-        pdxofig= 'Figures/pdxo.genomicsFig.20210129.pdf'
+        pdxofig= 'Figures/Fig4b_pdxo.genomicsFig.'+DATE+'.pdf'
     shell:
         '''
         Rscript --quiet --vanilla {input.code} {input.dna} {input.dnameta} {input.cnv} {input.cnvmeta} {input.rna} {input.rnameta} {input.rnaTOP} {output.pdxofig}
@@ -165,13 +163,13 @@ rule PAM50_custom_profiles:
 #This is going to make a complexHeatmap so... source activate stats
     input:
         plotpam50='Code/plotpam50.R',
-        batched='Processed_data/Rebuttal/normalized.DESEQ.RSEM.txt',
+        batched='Processed_data/normalized.DESEQ.RSEM.txt',
         genelist=config['PAM50'],
         rnaTOmeta=config['INRNAMETA'],
         pam50class=config['PAM50CLASS'],
         clinical=config['CLINICAL']
     output:
-        pampdf='Figures/Fig4c_pam50.Counts.Indepth.20210618.pdf',
+        pampdf='Figures/Fig4c_pam50.Counts.Indepth.'+DATE+'.pdf',
     shell:
         '''
         Rscript --quiet --vanilla {input.plotpam50} {input.batched} {input.genelist} {input.rnaTOmeta} {input.pam50class} {input.clinical} {output.pampdf}
@@ -186,38 +184,44 @@ rule LAR_expression_profiles:
         pam50class=config['PAM50CLASS'],
         clinical=config['CLINICAL']
     output:
-        pampdf='Figures/pam50.Counts.AR.pdf'
+        pampdf='Figures/fig66c_pam50.Counts.AR.pdf'
     shell:
         '''
         Rscript --quiet --vanilla {input.plotpam50} {input.batched} {input.genelist} {input.rnaTOmeta} {input.pam50class}  {input.clinical} {output.pampdf}
         '''
 
 rule Figure_1a:
+#source activate stats 
     input:
-        fig1a="Figures/Fig1a_pdx.to.genomicsFig.20210218.pdf"
+        fig1a='Figures/Fig1a_pdx.to.genomicsFig.'+DATE+'.pdf'
 
 rule Figure_1b:
+#source activate stats 
     input:
-        fig1b="Figures/Fig1b_pam50.Counts.20210218.pdf"
+        fig1b='Figures/Fig1b_pam50.Counts.'+DATE+'.pdf'
 
 rule Figure_4b:
+#source activate stats 
     input:
-        fig4b="Figures/Fig4b_pdxo.genomicsFig.20210129.pdf"
+        fig4b='Figures/Fig4b_pdxo.genomicsFig.'+DATE+'.pdf'
 
 rule Figure_4c:
+#source activate stats
     input:
-        fig4c="Figures/Fig4c_pam50.Counts.Indepth.20210618.pdf"
+        fig4c='Figures/Fig4c_pam50.Counts.Indepth.'+DATE+'.pdf'
 
 rule Figure_57b:
+#source activate rnaseq2
     input:
-        fig_extended_6b="Figures/fig57b.threshold.adj.pdf"
+        fig_extended_6b='Figures/fig57b.CNV.threshold.adj.pdf'
 
 #Note Figure_57a
 #This was done using cnvkit.py heatmap *.segs --no-shift-xy -g Female -c 6
 
 rule Figure_66:
+#source activate stats
     input:
-        fig_extended_10c="Figures/fig66c_pam50.Counts.AR.pdf"
+        fig_extended_10c='Figures/fig66c_pam50.Counts.AR.pdf'
 
 
 

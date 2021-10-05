@@ -1,0 +1,12 @@
+Hugo_Symbol	Entrez_Gene_Id	Center	NCBI_Build	Chromosome	Start_Position	End_Position	Strand	Variant_Classification	Variant_Type	Reference_Allele	Tumor_Seq_Allele1	Tumor_Seq_Allele2	dbSNP_RS	dbSNP_Val_Status	Tumor_Sample_Barcode
+DIAPH2	1730	.	GRCh38	chrX	96916436	96916437	+	Splice_Site	DNP	AG	AG	TT	novel	NA	HCI001_pdxo_p5_60_WXS
+TET2	54790	.	GRCh38	chr4	105236342	105236343	+	Frame_Shift_Ins	INS	-	-	A	novel	NA	HCI002_tumor_patient_redo_WXS
+TET2	54790	.	GRCh38	chr4	105236403	105236406	+	Frame_Shift_Del	DEL	CAGA	CAGA	-	novel	NA	HCI002_tumor_patient_redo_WXS
+DIAPH2	1730	.	GRCh38	chrX	96916436	96916437	+	Splice_Site	DNP	AG	AG	TT	novel	NA	HCI002_pdx_P7_XXX_WXS
+DIAPH2	1730	.	GRCh38	chrX	96916437	96916437	+	Splice_Site	SNP	G	G	T	rs774703354	NA	HCI002_tumor_patient_redo_WXS
+MACF1	23499	.	GRCh38	chr1	39434412	39434412	+	Splice_Site	SNP	A	A	T	rs1458715960	NA	HCI019_tumor_patient_XXX_WXS
+CHD3	1107	.	GRCh38	chr17	7899999	7900019	+	In_Frame_Del	DEL	ATGAGGCCCATCGACTCAAGA	ATGAGGCCCATCGACTCAAGA	-	novel	NA	HCI019_pdxo_P3_142_WXS
+ATXN3	4287	.	GRCh38	chr14	92083260	92083260	+	Splice_Site	SNP	T	T	A	novel	NA	HCI025_pdxo_p2_220_WXS
+DIAPH2	1730	.	GRCh38	chrX	96916437	96916438	+	In_Frame_Ins	INS	-	-	TTT	rs1294597742	NA	HCI025_pdxo_p2_74_WXS
+STAG2	10735	.	GRCh38	chrX	124051121	124051121	+	Nonsense_Mutation	SNP	C	C	T	rs868506126	NA	HCI025_pdx_P2_XXX_WXS
+ASXL2	55252	.	GRCh38	chr2	25742028	25742038	+	Nonstop_Mutation	DEL	ATTACCGAACG	ATTACCGAACG	-	novel	NA	HCI027_tumor_patient_XXX_WXS

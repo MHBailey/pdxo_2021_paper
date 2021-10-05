@@ -1,0 +1,11 @@
+FOXC1	Basal
+MKI67	Basal
+CDC20	Basal
+CCNE1	Basal
+ORC6	Basal
+GRB7	Her2
+ERBB2	Her2
+FOXA1	Luminal
+ESR1	Luminal
+PGR	Luminal
+AR	Test
