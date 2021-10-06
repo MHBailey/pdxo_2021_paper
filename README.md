@@ -14,11 +14,13 @@ conda env create -f stats.yml
 #### STEP 1.2 Create the rnaseq2 env 
 conda env create -f rnaseq2.yml 
 
+#### STEP 1.3 Create the gr50 env
+conda env create -f gr50.yml
 
 ## STEP 2: Building the genomics figures 
 This code is organized using [snakemake](https://snakemake.readthedocs.io/en/stable/). After data is acquired through dbGaP the each of the base figures (before tidying them up using Adobe Illustrator) can be generated one at a time or all together. 
 
-I was a little sloppy having two conda environments to get this off the ground but I found that bioconda's DESeq2 didn't play well with other packages like ComplexHeatmap. What I'm trying to say is sometimes you'll have to switch environments to get the analysis working correctly (All rules that require the rule normalize_RNA) will have to be run with source activate rnaseq2 and stats.   
+I was extra carefule with the conda environments to get this off the ground but I found that bioconda's DESeq2 didn't play well with other packages like ComplexHeatmap. What I'm trying to say is sometimes you'll have to switch environments to get the analysis working correctly (All rules that require the rule normalize_RNA) will have to be run with source activate rnaseq2 and stats.   
 
 #### STEP 2.1
 source activate stats
@@ -31,6 +33,11 @@ snakemake -p Figure_4c\
 snakemake -p Figure_57b\
 snakemake -p Figure_66c
 
-## Building the screening figures 
+
+## STEP 3 Building the screening figures 
+#### STEP 3.1 
+source activate gr50
+
+
 
 
