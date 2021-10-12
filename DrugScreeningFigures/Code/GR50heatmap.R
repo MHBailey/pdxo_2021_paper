@@ -19,7 +19,7 @@ if (length(args) != 4) {
 }
 
 
-#args <- c("Processed_data/Kat/HCI.gr50.scores.txt","Data/HCI_clinical.txt","Data/drugClasses.txt","Figures/OverallHeatmap.v1.pdf")
+#args <- c("Processed_data/HCI.gr50.scores.txt","Data/HCI_clinical_Mar2021.txt","Data/drugClasses.txt","Figures/fig5a_OverallHeatmap.pdf")
 
 dat <- fread(args[1])
 dat$GR50c <- log10(ifelse(dat$GR50 == 0, 999,dat$GR50))
