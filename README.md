@@ -45,19 +45,19 @@ Please note that the order of the figure generation is critical to successful fi
 
 #### STEP 3.1 (NOTE: make sure use the correct environment with each snakemake command, will clean this up over the next couple of weeks)
 source activate gr50\
-cd DrugScreeningFigures\ 
+cd DrugScreeningFigures\
 snakemake -p figure_67b\
 snakemake -p figure_61\
 snakemake -p figure_5b\
-conda deactivate
-cd ../cd 
+conda deactivate\
+cd ../ 
 
 #### STEP 3.2 (use -np for a dry-run) 
 source activate stats\
-cd DrugScreeningFigures\ 
+cd DrugScreeningFigures\
 snakemake -p figure_5a\
 snakemake -p figure_58\
-snakemake -p figsupp67
-conda deactivate
+snakemake -p figsupp67\
+conda deactivate\
 cd ../
 
