@@ -44,15 +44,20 @@ The data for the drug screening data is provided as supplementary tables in the 
 Please note that the order of the figure generation is critical to successful figure generation. 
 
 #### STEP 3.1 (NOTE: make sure use the correct environment with each snakemake command, will clean this up over the next couple of weeks)
-source activate gr50
-source activate stats 
-
-#### STEP 3.2 (use -np for a dry-run) 
+source activate gr50\
+cd DrugScreeningFigures\ 
 snakemake -p figure_67b\
-snakemake -p figure_5a\
-snakemake -p figure_58\
 snakemake -p figure_61\
 snakemake -p figure_5b\
-snakemake -p figsupp67
+conda deactivate
+cd ../cd 
 
+#### STEP 3.2 (use -np for a dry-run) 
+source activate stats\
+cd DrugScreeningFigures\ 
+snakemake -p figure_5a\
+snakemake -p figure_58\
+snakemake -p figsupp67
+conda deactivate
+cd ../
 
