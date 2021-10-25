@@ -39,7 +39,6 @@ dependencies:
   - certifi=2020.6.20=py36h9f0ad1d_0
   - cffi=1.13.2=py36h33e799b_0
   - chardet=3.0.4=py36_1003
-  - clang=9.0.0=default_hf57f61e_4
   - clang_osx-64=9.0.0=h05bbb7f_6
   - clangxx=9.0.0=default_hf57f61e_4
   - clangxx_osx-64=9.0.0=h05bbb7f_6
