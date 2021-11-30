@@ -76,7 +76,7 @@ dependencies:
   - libopenblas=0.3.3=hdc02c5d_3
   - libpng=1.6.35=ha441bb4_0
   - libsodium=1.0.16=h3efe00b_0
-  - libssh2=1.8.0=1
+  - libssh2=1.8.0
   - libtiff=4.0.9=hcb84e12_2
   - libxml2=2.9.8=hab757c2_1
   - llvm=4.0.1=1

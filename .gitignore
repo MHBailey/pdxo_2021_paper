@@ -8,6 +8,7 @@ DrugScreeningFigures/Data/Screens/*
 DrugScreeningFigures/Figures/GR50/*
 DrugScreeningFigures/Figures/GRAOC/*
 DrugScreeningFigures/Figures/GREC50/*
+DrugScreeningFigures/Figures/*
 DrugScreeningFigures/*.pdf
 DrugScreeningFigures/Processed_data/* 
 *.pdf

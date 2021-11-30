@@ -18,8 +18,8 @@ if (length(args) != 4) {
   stop("This should contain on <input.rule.transform_kat> <output.rule.compute_gr50.scores>", call.=FALSE)
 }
 
-
-#args <- c("Processed_data/Kat/E2plus.gr50.reformatted.txt",'Processed_data/Kat/HCIday.gr50.scores.txt','Figures/Lines/growthRates.pdf','Figures/Lines/example.screeningScore.pdf')
+ 
+#args <- c("Processed_data/supp2.gr50.reformatted.txt","Processed_data/HCIday.gr50.scores.txt","Figures/Lines/growthRates.pdf","Figures/Lines/example.screeningScore.pdf")
 
 
 
@@ -94,7 +94,7 @@ dev.off()
 
 #DIVE into HCI027
 samp <- "HCI-027|HCI-023|HCI-015|HCI-016|HCI-003|HCI-005|HCI-002|HCI-010"
-drug <- "ro4929097 "
+drug <- "ro4929097 "
 onesamp <- doc[which(grepl(samp,doc$HCIid)),]
 onedrug <- onesamp[which(grepl(drug,onesamp$drug)),c("HCIday","GR50","GR_AOC")]
 
@@ -178,7 +178,8 @@ for(s in samples){
 
     ns$ordDrug <- factor(ns$drug,levels=ndo)
     nsx <- data.frame(ns %>% group_by(ordDrug,concentration) %>% summarize("FCmean"=mean(FCvalue)))
-    I
+    
+    p <- ggplot(na.omit(nsx),aes(x=ordDrug,y=factor(concentration)))
     p <- p + geom_tile(aes(fill=FCmean))
     p <- p + scale_fill_viridis(option="magma")
     #p <- p + scale_fill_gradient2(low = "#FDE725", mid = "white", high = "#440154", midpoint = 1,limits=c(0,4))
@@ -186,30 +187,10 @@ for(s in samples){
     p <- p + theme(legend.position="top")
     p <- p + ylab("Drug concentration") + xlab("")
     p <- p + ggtitle(toupper(s))
-    p <- p + scale_x_discrete(labels = nda)
+    #p <- p + scale_x_discrete(labels = nda)
 
-    graocs <- as.data.frame(t(daoc2[which(rownames(daoc2) == s),]))
-    graocs$ordDrug <- factor(rownames(graocs),levels=ndo)
-    colnames(graocs) <- c("grAOC","ordDrug")
-
-    #Add second part of the plot
-    p2 <- ggplot(graocs[which(!is.na(graocs$ordDrug)),],aes(x=ordDrug))
-    p2 <- p2 + geom_point(aes(y=grAOC),color="limegreen",size=2)
-    p2 <- p2 + theme_minimal()
-    p2 <- p2 + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=.5),legend.position="bottom")
-    p2 <- p2 + xlab("")+ylab("GR_AOC")
-    p2
-
-    gA <- ggplotGrob(p)
-    gB <- ggplotGrob(p2)
-
-    maxWidth = grid::unit.pmax(gA$widths[2:5], gB$widths[2:5])
-    gA$widths[2:5] <- as.list(maxWidth)
-    gB$widths[2:5] <- as.list(maxWidth)
-
-
-    pdf(paste("Figures/Lines/OutputAOC/June24_Data",s,".grAOC.pdf",sep=""),useDingbats=F,height=5,width=6)
-    grid.arrange(gA, gB, ncol = 1, heights = c(5, 2))
+    pdf(paste("Figures/Lines/OutputAOC/",s,".grAOC.pdf",sep=""),useDingbats=F,height=5,width=6)
+    print(p)
     dev.off()
 
 }
@@ -244,78 +225,12 @@ for(s in hcis){
     p <- p + facet_wrap(~drug,scale=)
     p
 
-    pdf(paste("Figures/Lines/OutputBYsample/June24_",s,".sample.pdf",sep=""),useDingbats=F,height=20,width=16)
+    pdf(paste("Figures/Lines/OutputBYsample/",s,".sample.pdf",sep=""),useDingbats=F,height=20,width=16)
     print(p)
     dev.off()
     
 }
-
-
-
-
-for(s in samples){
-    print(s)
-    ns <- dovc[which(dovc$HCIday == s),]
-    #this is a normalization step for above 1 and below -1
-    ns$GRvalue2 <- ifelse(ns$GRvalue < -1, -1, ns$GRvalue)
-    ns$GRvalue3 <- ifelse(ns$GRvalue2 > 3, 3, ns$GRvalue2)
-    ns$FCvalue <- ns$cell_count/ns$cell_count__time0
-    #Orderin the drugs
-    daoc <- dcast(d, HCIday ~ drug, value.var="GR_AOC")
-    daoc2 <- daoc[which(daoc$HCIday %!in% remsamps),]
-    rownames(daoc2) <- daoc2$HCIday
-    daoc2$HCIday <- NULL
-    daoc3 <- data.frame(lapply(daoc2, function(x) scale(x)))
-    colnames(daoc3) <- colnames(daoc2)
-    rownames(daoc3) <- rownames(daoc2)
-    no <- data.frame(t(daoc3[which(rownames(daoc3) == s),]))
-    no$drug <- rownames(no)
-    colnames(no) <- c("AOCadj","drug")
-    nona <- na.omit(no)
-    nord <- nona[order(-nona$AOCadj),]$drug
-    nsdrugs <- unique(ns$drug)
-    sd <- setdiff(nsdrugs,nord)
-    sda <- paste(sd,"*",sep="")
-    ndo <- c(nord,sd)
-    nda <- c(nord,sda)
-
-    ns$ordDrug <- factor(ns$drug,levels=ndo)
-    nsx <- data.frame(ns %>% group_by(ordDrug,concentration) %>% summarize("FCmean"=mean(FCvalue)))
-    p <- ggplot(na.omit(nsx),aes(x=ordDrug,y=factor(concentration)))
-    p <- p + geom_tile(aes(fill=FCmean))
-    p <- p + scale_fill_viridis(option="magma")
-    #p <- p + scale_fill_gradient2(low = "#FDE725", mid = "white", high = "#440154", midpoint = 1,limits=c(0,4))
-    p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=.5))
-    p <- p + theme(legend.position="top")
-    p <- p + ylab("Drug concentration") + xlab("")
-    p <- p + ggtitle(toupper(s))
-    p <- p + scale_x_discrete(labels = nda)
-
-    graocs <- as.data.frame(t(daoc3[which(rownames(daoc3) == s),]))
-    graocs$ordDrug <- factor(rownames(graocs),levels=ndo)
-    colnames(graocs) <- c("grAOCadj","ordDrug")
-
-    #Add second part of the plot
-    p2 <- ggplot(graocs[!is.na(graocs$ordDrug),],aes(x=ordDrug))
-    p2 <- p2 + geom_point(aes(y=grAOCadj),color="limegreen",size=2)
-    p2 <- p2 + theme_minimal()
-    p2 <- p2 + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=.5),legend.position="bottom")
-    p2 <- p2 + xlab("")+ylab("scaled(GR_AOC)")
-    p2
-
-    gA <- ggplotGrob(p)
-    gB <- ggplotGrob(p2)
-
-    maxWidth = grid::unit.pmax(gA$widths[2:5], gB$widths[2:5])
-    gA$widths[2:5] <- as.list(maxWidth)
-    gB$widths[2:5] <- as.list(maxWidth)
-
-
-    pdf(paste("Figures/Lines/OutputAOC/June24_Data",s,".grAOCadj.pdf",sep=""),useDingbats=F,height=5,width=6)
-    grid.arrange(gA, gB, ncol = 1, heights = c(5, 2))
-    dev.off()
-}
-
+    
 #d = 'birinapant'
 for(d in drugs){
     print(d)
@@ -344,7 +259,7 @@ for(d in drugs){
     p <- p + ylab("Drug concentration") + xlab("")
     p <- p + ggtitle(toupper(d))
     #p <- p + scale_x_discrete(labels = nsa)
-    pdf(paste("Figures/Lines/OutputAOC/June24_",d,".aoc.pdf",sep=""),useDingbats=F,height=4,width=6)
+    pdf(paste("Figures/Lines/OutputAOC/",d,".aoc.pdf",sep=""),useDingbats=F,height=4,width=6)
     print(p)
     dev.off()
 }
@@ -370,11 +285,11 @@ print(p)
 dev.off()
 
 #For all points
-explist <- unique(do$experiment[grepl(drcDrg,do$experiment)])
-explist2 <- explist[which(!grepl("Control",explist))]
+#explist <- unique(do$experiment[grepl(drcDrg,do$experiment)])
+#explist2 <- explist[which(!grepl("Control",explist))]
 
 
-GRdrawDRC(drc_output, experiments = explist2, plotly = TRUE, min = 10^(-4), max = 10^2)
+#GRdrawDRC(drc_output, experiments = explist2, plotly = TRUE, min = 10^(-4), max = 10^2)
 
 
 

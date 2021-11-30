@@ -66,7 +66,7 @@ write.table(do3,args[2],sep="\t", quote=F, row.names=F) #This is HCI
 write.table(do,args[3], sep="\t", quote=F, row.names=F) #This is Line
 
 toremove = c("Control","HCI-017.E2","HCI-011.E2")
-drugs_toremove = c("abitrexate")
+drugs_toremove = c("")
 
 doc <- do[which(do$HCIid %!in% toremove & do$drug %!in% drugs_toremove),]
 doc3 <- do3[which(do3$HCIid %!in% toremove & do3$drug %!in% drugs_toremove),]
@@ -108,7 +108,7 @@ dev.off()
 
 #DIVE into HCI027
 samp <- "HCI-027|HCI-023|HCI-015|HCI-016|HCI-003|HCI-005|HCI-002|HCI-010"
-drug <- "ro4929097 "
+drug <- "ro4929097 "
 onesamp <- doc[which(grepl(samp,doc$HCIid)),]
 onedrug <- onesamp[which(grepl(drug,onesamp$drug)),c("cell_line","GR50","GR_AOC")]
 
@@ -196,7 +196,6 @@ for(s in samples){
     p <- ggplot(na.omit(nsx),aes(x=ordDrug,y=factor(concentration)))
     p <- p + geom_tile(aes(fill=FCmean))
     p <- p + scale_fill_viridis(option="magma")
-    #p <- p + scale_fill_gradient2(low = "#FDE725", mid = "white", high = "#440154", midpoint = 1,limits=c(0,4))
     p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=.5))
     p <- p + theme(legend.position="top")
     p <- p + ylab("Drug concentration") + xlab("")
@@ -251,8 +250,7 @@ for(d in drugs){
     ndx <- data.frame(nd %>% group_by(ordHCIid,concentration) %>% summarize("FCmean"=mean(FCvalue)))
     p <- ggplot(na.omit(ndx),aes(x=ordHCIid,y=factor(concentration)))
     p <- p + geom_tile(aes(fill=FCmean))
-    p <- p + scale_fill_viridis(option = "magma",direction = 1,limit=c(-0.1,4))
-    #p <- p + scale_fill_gradient2(low = "#FDE725", mid = "white", high = "#440154",  midpoint = 1,limits=c(0,4))
+    p <- p + scale_fill_viridis(option = "magma",direction = 1,limit=c(-0.25,4.5))
     p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=.5))
     p <- p + ylab("Drug concentration") + xlab("")
     p <- p + ggtitle(toupper(d))
@@ -266,7 +264,6 @@ for(d in drugs){
     p <- ggplot(na.omit(ndx),aes(x=ordHCIid,y=factor(concentration)))
     p <- p + geom_tile(aes(fill=FCmean))
     p <- p + scale_fill_viridis(option = "magma",direction = 1)
-    #p <- p + scale_fill_gradient2(low = "#FDE725", mid = "white", high = "#440154",  midpoint = 1,limits=c(0,4))
     p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=.5))
     p <- p + ylab("Drug concentration") + xlab("")
     p <- p + ggtitle(toupper(d))
@@ -337,7 +334,6 @@ dev.off()
 #    p <- ggplot(na.omit(ndx),aes(x=ordHCIid,y=factor(concentration)))
 #    p <- p + geom_tile(aes(fill=FCmean))
 #    p <- p + scale_fill_viridis(option = "magma",direction = 1)
-#    #p <- p + scale_fill_gradient2(low = "#FDE725", mid = "white", high = "#440154",  midpoint = 1,limits=c(0,4))
 #    p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=.5))
 #    p <- p + ylab("Drug concentration") + xlab("")
 #    p <- p + ggtitle(toupper(d))
@@ -369,7 +365,6 @@ dev.off()
 #    p <- ggplot(na.omit(nsx),aes(x=ordDrug,y=factor(concentration)))
 #    p <- p + geom_tile(aes(fill=FCmean))
 #    p <- p + scale_fill_viridis(option="magma")
-#    #p <- p + scale_fill_gradient2(low = "#FDE725", mid = "white", high = "#440154", midpoint = 1,limits=c(0,4))
 #    p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=.5))
 #    p <- p + theme(legend.position="top")
 #    p <- p + ylab("Drug concentration") + xlab("")
@@ -430,7 +425,6 @@ dev.off()
 #    p <- ggplot(na.omit(nsx),aes(x=ordDrug,y=factor(concentration)))
 #    p <- p + geom_tile(aes(fill=FCmean))
 #    p <- p + scale_fill_viridis(option="magma")
-#    #p <- p + scale_fill_gradient2(low = "#FDE725", mid = "white", high = "#440154", midpoint = 1,limits=c(0,4))
 #    p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=.5))
 #    p <- p + theme(legend.position="top")
 #    p <- p + ylab("Drug concentration") + xlab("")
@@ -469,7 +463,7 @@ dev.off()
 ####### ADJ is just an adjust way to prioritize the data 
 ##DIVE into HCI027
 #samp <- "HCI-027|HCI-023|HCI-015|HCI-016|HCI-003|HCI-005|HCI-002|HCI-010"
-#drug <- "ro4929097 "
+#drug <- "ro4929097 "
 #onesamp <- doc[which(grepl(samp,doc$HCIid)),]
 #onedrug <- onesamp[which(grepl(drug,onesamp$drug)),c("cell_line","GR50","GR_AOC")]
 #
