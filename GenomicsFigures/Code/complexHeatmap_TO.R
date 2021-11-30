@@ -93,7 +93,7 @@ pancan2013 <- c("CCND1","EGFR","MYC","ERBB2","CCNE1","MCL1","MDM2","NSD3","FGFR1
 pancan2010 <- c("MYC","CCND1","ERBB2","CDK4","NKX2-1","MDM2","EGFR","FGFR1","KRAS","MCL1","BCL2L1")
 gynbreast <- c("CSMD1","STK11","MECOM","ZNF217","MCL1")
 foundation <- c("LYN","JAK1","JAK2","CD274","PDCD1LG2","ERBB4")
-ambry = c("ATM", "BARD1", "BRCA1", "BRCA2", "BRIP1", "CDH1", "CHEK2", "MRE11A", "MUTYH", "NBN", "NP1", "PALB2", "PTEN", "RAD50", "RAD51C", "RA051D", "STK11", "TP53")
+ambry = c("ATM", "BARD1", "BRCA1", "BRCA2", "BRIP1", "CDH1", "CHEK2", "MRE11A", "MUTYH", "NBN", "NP1", "PALB2", "PTEN", "RAD50", "RAD51C", "RAD51D", "STK11", "TP53")
 
 cnvglist <- unique(c(tcgaBRCAcnv,cbioBRCAcnv,pancan2013,pancan2010,gynbreast,foundation,ambry))
 cnvgl <- cnv[which(cnv$"Approved symbol" %in% cnvglist),]
