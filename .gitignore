@@ -12,3 +12,4 @@ DrugScreeningFigures/Figures/*
 DrugScreeningFigures/*.pdf
 DrugScreeningFigures/Processed_data/* 
 *.pdf
+*/.*.swp
