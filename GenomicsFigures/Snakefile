@@ -218,7 +218,7 @@ rule Figure_57b:
 #Note Figure_57a
 #This was done using cnvkit.py heatmap *.segs --no-shift-xy -g Female -c 6
 
-rule Figure_66:
+rule Figure_66c:
 #source activate stats
     input:
         fig_extended_10c='Figures/fig66c_pam50.Counts.AR.pdf'

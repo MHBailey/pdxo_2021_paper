@@ -1,0 +1,119 @@
+configfile: 'config.yaml'
+
+
+from pathlib import Path
+import datetime as dt
+
+DATE = dt.datetime.today().strftime("%Y_%m_%d")
+DAY = dt.datetime.today().strftime("%d")
+
+
+rule parse_kat:
+    input:
+        katDat=config['SUPPTABLE2'],
+        parseKat='Code/parseKat.py'
+    output:
+        katmatt='Processed_data/supp2.longformat.txt'
+    shell:
+        '''
+        python {input.parseKat} "{input.katDat}" > {output.katmatt}
+        '''
+
+rule transform_kat:
+    input:
+         katmatt='Processed_data/supp2.longformat.txt',
+         trans='Code/transformKat.R'
+    output:
+         katmatt='Processed_data/supp2.reformatted.txt',
+         gr50form='Processed_data/supp2.gr50.reformatted.txt'
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.trans} {input.katmatt} {output.katmatt} {output.gr50form}
+        '''
+
+rule compute_gr50:
+#This requires source activate gr50
+    input:
+        calcGR50='Code/compute_gr50.R',
+        gr50form='Processed_data/supp2.gr50.reformatted.txt'
+    output:
+        gr50scores='Processed_data/HCI.gr50.scores.txt',
+        gr50cell='Processed_data/Lines.gr50.scores.txt',
+        gr50values='Processed_data/Lines.gr50.values.txt',
+        growthrate='Figures/fig67b_growthRates.pdf',
+        exampleGR50='Figures/example.screeningScore.pdf'
+    shell:
+        '''
+        mkdir -p Figures/GRAOC 
+        mkdir -p Figures/GRAOC_indcolor
+    
+        Rscript --quiet --vanilla {input.calcGR50} {input.gr50form} {output.gr50scores} {output.gr50cell} {output.gr50values} {output.growthrate} {output.exampleGR50}
+        '''
+
+
+rule plot_gr50_heatmap:
+#This rule requires source activate stats, and makes stacked bar plots. 
+    input:
+        allscores='Processed_data/HCI.gr50.scores.txt',
+        clinical='Data/HCI_clinical_Mar2021.txt',
+        drugs='Data/drugClasses.txt',
+        plotter='Code/GR50heatmap.R'
+    output:
+        heatmap="Figures/fig5a_OverallHeatmap.pdf"
+    shell:
+       '''
+       mkdir -p Figures/StackedAOC
+
+       Rscript --quiet --vanilla {input.plotter} {input.allscores} {input.clinical} {input.drugs} {output.heatmap}
+       '''
+
+rule plot_technical_variability:
+#This rule requires stats conda env. and make the supp figure concerned with technical variablility between models. 
+    input: 
+        code='Code/variability_response.R',
+        raw='Processed_data/supp2.gr50.reformatted.txt'
+    output:
+        plotvar='Figures/fig58_variable_technical.pdf'
+    shell:
+        '''
+        Rscript --quiet --vanilla {input.code} {input.raw} {output.plotvar}
+        '''
+
+rule compute_gr50_replicates:
+#This requires source activate gr50 
+#NOTE: I went through this by hand so not full automated yet. 
+    input:
+        calcGR50='Code/compute_gr50_Lines.R',
+        gr50form='Processed_data/supp2.gr50.reformatted.txt'
+    output:
+        gr50scores='Processed_data/HCIday.gr50.scores.txt',
+        growthrate='Figures/Lines/growthRates.pdf',
+        exampleGR50='Figures/Lines/example.screeningScore.pdf',
+    shell:
+        '''
+        mkdir -p Figures/Lines
+        mkdir -p Figures/Lines/OutputBYsample
+        mkdir -p Figures/Lines/OutputAOC
+        
+        Rscript --quiet --vanilla {input.calcGR50} {input.gr50form} {output.gr50scores} {output.growthrate} {output.exampleGR50}
+        '''
+
+
+rule figure_67b: #This rule will actually capture Supp figs Supp 59 and supp 60 62c 63b 64b #source activate gr50 
+    input:
+        figsupp57='Figures/fig67b_growthRates.pdf'
+
+rule figure_5a: #This also covers the stacked plots. #source activate stats. 
+    input:
+        fig5a='Figures/fig5a_OverallHeatmap.pdf'
+
+rule figure_58: #This is variability bubble plot. 
+    input:
+        figsupp48='Figures/fig58_variable_technical.pdf' 
+
+rule figure_61: #We didn't use the growth figure in the manuscript but it will help generate all of the others for fig 61 in Figures/Lines/OutputBYsample #This requires conda env gr50 (source activate gr50) 
+    input:
+        fig61='Figures/Lines/growthRates.pdf'
+        
+#Figure_5b
+#Figure_Supp67 The correlation, density, stacked bar

@@ -1,6 +1,13 @@
 GenomicsFigures/Data/Genomics/*
 GenomicsFigures/Processed_data/*
 GenomicsFigures/Figures/*
+GenomicsFigures/*.pdf
 .snakemake/*
 .snakemake
+DrugScreeningFigures/Data/Screens/*
+DrugScreeningFigures/Figures/GR50/*
+DrugScreeningFigures/Figures/GRAOC/*
+DrugScreeningFigures/Figures/GREC50/*
+DrugScreeningFigures/*.pdf
+DrugScreeningFigures/Processed_data/* 
 *.pdf
